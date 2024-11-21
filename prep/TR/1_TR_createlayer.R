@@ -39,49 +39,53 @@ province_rgn_id <- data.frame(
 )
 
 # 1.6 Merge the result with province_rgn_id to include rgn_id
+# 1.6: Merge with the results and handle missing values
 result_with_ids <- result %>%
   left_join(province_rgn_id, by = "PROVINCIA") %>%
   select(rgn_id, year = ANO, Ep = PERCENT_TOURISM) # Rename columns as required
+
+
+all_years <- unique(result_with_ids$year)
+all_rgn_ids <- unique(result_with_ids$rgn_id)
+
+complete_data <- expand.grid(
+  rgn_id = all_rgn_ids,
+  year = all_years
+)
 
 tr_jobs_pct_tourism <- complete_data %>%
   left_join(result_with_ids, by = c("rgn_id", "year")) %>%
   mutate(Ep = ifelse(is.na(Ep), NA, Ep))
 
-#Remove data from 2023 because the data is not complete: 
+#Remove data from 2024 because the data is not complete: 
 
 tr_jobs_pct_tourism_filtered <- tr_jobs_pct_tourism %>%
   filter(year != 2024)
-write.csv(tr_jobs_pct_tourism_filtered, "/Users/batume/Documents/R/GAL_git/region/layers/tr_jobs_pct_tourism.csv", row.names = FALSE)
+
+#write.csv(tr_jobs_pct_tourism_filtered, "/Users/batume/Documents/R/GAL_git/region/layers/tr_jobs_pct_tourism.csv", row.names = FALSE)
+tr_jobs_pct_tourism<-tr_jobs_pct_tourism_filtered
 
 #2 PREPARE SUSTENTABILITY INDEX LAYER - https://www.weforum.org/publications/travel-tourism-development-index-2024/
-# 2.1: Read the raw data
-ttdi_file <- "WEF_TTDI_2021_data_for_download.xlsx"
-ttdi_raw <- read_excel(ttdi_file, skip = 2)
 
-# 2.2: Move up column names from the first row while keeping the full country names as columns too
-names(ttdi_raw)[1:9] <- as.character(ttdi_raw[1, 1:9])
-
-# 2.3 Filter for sustainability scores, select needed columns, and pivot to tidy format
-ttdi <- ttdi_raw %>%
-  filter(Title == "T&T Sustainability subindex, 1-7 (best)",
-         Attribute == "Score") %>%
-  select(year = Edition, Albania:Zambia) %>%
-  pivot_longer(cols = Albania:Zambia, names_to = "country", values_to = "score") %>%
-  mutate(score = as.numeric(score))
-
-# 2.4: Filter only for Spain
-ttdi_spain <- ttdi %>%
-  filter(country == "Spain") %>%
-  select(year, country, score)
-
-#2.5: Add the 2024 value:
-
-spain_2024 <- data.frame(
-  year = 2024,
-  country = "Spain",
-  score = 5.18
+# Create the data
+ttdi_spain <- data.frame(
+  year = c(2013, 2015, 2017, 2018, 2019, 2021, 2024),
+  country = c("Spain", "Spain", "Spain", "Spain", "Spain", "Spain", "Spain"),
+  score = c(5.38, 5.31, 5.43, 5.4, 5.4, 5.2, 5.18)
 )
 
-ttdi_spain <- rbind(ttdi_spain, spain_2024)
+# Save the data as a CSV file
+write.csv(ttdi_spain, "spain_ttdi_scores.csv", row.names = FALSE)
 
-write.csv(ttdi_spain, "wef_ttdi_spain.csv", row.names = FALSE)
+#2.6: Order by year and round decimals
+ttdi_spain <- ttdi_spain %>%
+  mutate(score = round(score, 2)) %>% 
+  arrange(year) 
+
+#2.7: Remove `country` and expand for all `rgn_id` values
+ttdi_galicia <- ttdi_spain %>%
+  select(-country) %>%         # Remove the `country` column
+  crossing(rgn_id = 1:4) 
+
+#2.8: Save the expanded dataset if needed
+write_csv(ttdi_galicia, "~/Documents/R/GAL_git/prep/AO/ttdi_galicia.csv")
