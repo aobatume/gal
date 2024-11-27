@@ -1,12 +1,16 @@
 # 1 TOURISM AND RECREATION
-
+library(tibble)
+library(readr)
+library(dplyr)
+library(ggplot2)
 #1.1Load wb_gdppcpp file to gapfill
 
 tr_jobs_pct_tourism<-read_csv( "/Users/batume/Documents/R/GAL_git/region/layers/tr_jobs_pct_tourism.csv")     
 
-library(readr)
+ttdi_galicia <- read_csv("~/Documents/R/GAL_git/prep/AO/ttdi_galicia.csv")
+
 wb_gdppcppp_rescaled <- read_csv("~/Documents/R/GAL_git/prep/AO/wb_gdppcppp_rescaled.csv")
-View(wb_gdppcppp_rescaled)
+
 
 #1.2 Filter GDP data for region ID 182
 wb_gdppcppp_spain <- wb_gdppcppp_rescaled %>%
@@ -23,8 +27,6 @@ wb_gdppcppp_galicia <- wb_gdppcppp_spain %>%
 
 #OPTION B - USE IGE DATA (https://www.ige.gal/dba/esq.jsp?idioma=es&paxina=002008&ruta=indicadores.jsp)
 
-library(tibble)
-
 pib_galicia <- tibble(
   rgn_id = 1,  # Initial region ID for Galicia
   year = c(2020, 2021, 2022, 2023, 2024),
@@ -35,10 +37,11 @@ pib_galicia <- tibble(
 pib_galicia<- pib_galicia %>%
   slice(rep(1:n(), each = 3)) %>% 
   mutate(rgn_id = rep(c(1, 2, 3), times = nrow(.) / 3))
-
+getwd()
 print(pib_galicia)
-write.csv(pib_galicia, "pib_galicia.csv", row.names = FALSE)
+write.csv(pib_galicia, "/Users/batume/Documents/R/GAL_git/prep/TR/pib_galicia.csv", row.names = FALSE)
 
+pib_galicia<-read_csv( "/Users/batume/Documents/R/GAL_git/prep/TR/pib_galicia.csv")     
 
 #OPTION C USE INE DATA (https://www.ine.es/jaxiT3/Datos.htm?t=45599)
 
@@ -49,6 +52,10 @@ pib_INE<- tibble(
 pib_INE<- pib_INE %>%
   slice(rep(1:n(), each = 3)) %>% 
   mutate(rgn_id = rep(c(1, 2, 3), times = nrow(.) / 3))
+
+write.csv(pib_INE, "/Users/batume/Documents/R/GAL_git/prep/TR/pib_INE.csv", row.names = FALSE)
+
+pib_INE<-read_csv( "/Users/batume/Documents/R/GAL_git/prep/TR/pib_INE.csv")     
 
 
 ######## 2 Gapfilling
@@ -118,11 +125,8 @@ tr_sust <- tr_sust %>%
 (tr_sust)
 
 
-
-
 #pib_galicia <- pib_galicia %>%
 #mutate(value = scales::rescale(value, to = c(0, 1)))
-
 
 
 # 3 STATUS CALCULATION AND TREND - by region
