@@ -1,5 +1,7 @@
 # Load necessary libraries
 library(dplyr)
+library(tidyr)
+
 setwd("prep/TR/")
 tourism_data <- read.csv("Empregoturismo_AFILIACIONS_Mes.csv")
 
@@ -38,12 +40,11 @@ province_rgn_id <- data.frame(
   rgn_id = c(1, 2, 3, 4)
 )
 
-# 1.6 Merge the result with province_rgn_id to include rgn_id
-# 1.6: Merge with the results and handle missing values
+# 1.6 Merge the result with province_rgn_id to include rgn_id and handle missing values
+
 result_with_ids <- result %>%
   left_join(province_rgn_id, by = "PROVINCIA") %>%
-  select(rgn_id, year = ANO, Ep = PERCENT_TOURISM) # Rename columns as required
-
+  select(rgn_id, year = ANO, Ep = PERCENT_TOURISM) 
 
 all_years <- unique(result_with_ids$year)
 all_rgn_ids <- unique(result_with_ids$rgn_id)
@@ -58,8 +59,8 @@ tr_jobs_pct_tourism <- complete_data %>%
   mutate(Ep = ifelse(is.na(Ep), NA, Ep))
 
 #Remove data from 2024 because the data is not complete: 
-
-tr_jobs_pct_tourism_filtered <- tr_jobs_pct_tourism %>%
+plot(tr_jobs_pct_tourism_filtered)
+ tr_jobs_pct_tourism_filtered <- tr_jobs_pct_tourism %>%
   filter(year != 2024)
 
 #write.csv(tr_jobs_pct_tourism_filtered, "/Users/batume/Documents/R/GAL_git/region/layers/tr_jobs_pct_tourism.csv", row.names = FALSE)
@@ -84,8 +85,8 @@ ttdi_spain <- ttdi_spain %>%
 
 #2.7: Remove `country` and expand for all `rgn_id` values
 ttdi_galicia <- ttdi_spain %>%
-  select(-country) %>%         # Remove the `country` column
+  select(-country) %>%        
   crossing(rgn_id = 1:4) 
 
-#2.8: Save the expanded dataset if needed
+#2.8: Save the expanded dataset
 write_csv(ttdi_galicia, "~/Documents/R/GAL_git/prep/AO/ttdi_galicia.csv")
