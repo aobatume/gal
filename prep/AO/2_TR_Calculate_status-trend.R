@@ -12,6 +12,8 @@ ttdi_galicia <- read_csv("~/Documents/R/GAL_git/prep/AO/ttdi_galicia.csv")
 wb_gdppcppp_rescaled <- read_csv("~/Documents/R/GAL_git/prep/AO/wb_gdppcppp_rescaled.csv")
 
 
+# OPTION A- USE gdppcppp DATA 
+
 #1.2 Filter GDP data for region ID 182
 wb_gdppcppp_spain <- wb_gdppcppp_rescaled %>%
   filter(rgn_id == 182)
@@ -43,7 +45,7 @@ write.csv(pib_galicia, "/Users/batume/Documents/R/GAL_git/prep/TR/pib_galicia.cs
 
 pib_galicia<-read_csv( "/Users/batume/Documents/R/GAL_git/prep/TR/pib_galicia.csv")     
 
-#OPTION C USE INE DATA (https://www.ine.es/jaxiT3/Datos.htm?t=45599)
+# SETECTED!!! OPTION C USE INE DATA (https://www.ine.es/jaxiT3/Datos.htm?t=45599)
 
 pib_INE<- tibble(
   year = c(2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015),
@@ -58,11 +60,12 @@ write.csv(pib_INE, "/Users/batume/Documents/R/GAL_git/prep/TR/pib_INE.csv", row.
 pib_INE<-read_csv( "/Users/batume/Documents/R/GAL_git/prep/TR/pib_INE.csv")     
 
 
-######## 2 Gapfilling
-PIB_GDP<-pib_INE
+######## 2 Gapfilling - USE INE DATA, BETTER MODEL
+PIB_GDP<-wb_gdppcppp_galicia
 # 2.1 `year` to character 
   PIB_GDP <- PIB_GDP %>%
     mutate(year = as.character(year))
+  
   
   ttdi_galicia <- ttdi_galicia %>%
     mutate(year = as.character(year))
@@ -77,14 +80,9 @@ tr_sust <- PIB_GDP %>%
   rename(S_score = score, Ep = Ep) %>%
   mutate(S_score = as.numeric(S_score))  
 
-tr_sust <- PIB_GDP %>%
-  full_join(ttdi_galicia, by = c("rgn_id", "year")) %>%
-  full_join(tr_jobs_pct_tourism, by = c("rgn_id", "year")) %>%
-  rename(S_score = score, Ep = Ep) %>%
-  mutate(S_score = as.numeric(S_score))
-
 
 head(tr_sust)
+
 
 #2.3 gapfill flags
 tr_sust <- tr_sust %>%
@@ -103,6 +101,34 @@ mod_gdp <- lm(S_score ~ value, data = tr_sust, na.action = na.exclude)
 sum(is.na(tr_sust$value))  
 
 summary(mod_gdp)
+
+
+plot(tr_sust$value, tr_sust$S_score, main = "S_score vs. value",
+     xlab = "value", ylab = "S_score", pch = 19)
+abline(mod_gdp, col = "blue", lwd = 2)
+
+
+#NEW BITS 
+
+# Filter the rows for the years of interest (2020, 2022, 2023)
+years_to_predict <- c("2020", "2022", "2023")
+tr_sust_gapfilled <- tr_sust %>%
+  filter(year %in% years_to_predict & is.na(S_score)) %>%
+  mutate(S_score_predicted = predict(mod_gdp, newdata = .))
+
+# Merge predictions back to the original dataset
+tr_sust <- tr_sust %>%
+  left_join(tr_sust_gapfilled %>% select(year, rgn_id, S_score_predicted), 
+            by = c("year", "rgn_id"))
+
+# Fill missing S_score with predictions
+tr_sust <- tr_sust %>%
+  mutate(S_score = ifelse(is.na(S_score), S_score_predicted, S_score))
+
+
+
+
+
 
 # Step 2.5: Predict S_score for rows with missing values (NOT WORKING)
 is.na(tr_sust$S_score)
@@ -129,6 +155,8 @@ tr_sust <- tr_sust %>%
 #mutate(value = scales::rescale(value, to = c(0, 1)))
 
 
+tr_sust_backup<-tr_sust
+
 # 3 STATUS CALCULATION AND TREND - by region
 
 # Extract the years 2018 to 2022 from tr_sust
@@ -143,10 +171,7 @@ tr_sust_filtered <- tr_sust %>%
   filter(!year %in% c("2020", "2021", "2022")) %>%
   mutate(T_r = Ep * S_score)
 
-# 3.2 Calculate 90th percentiles **by region** for both datasets
-T_90th_by_region <- tr_sust %>%
-  group_by(rgn_id) %>%
-  summarize(T_90th = quantile(T_r, 0.9, na.rm = TRUE))
+
 
 T_90th_filtered_by_region <- tr_sust_filtered %>%
   group_by(rgn_id) %>%
