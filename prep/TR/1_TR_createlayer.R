@@ -90,3 +90,49 @@ ttdi_galicia <- ttdi_spain %>%
 
 #2.8: Save the expanded dataset
 write_csv(ttdi_galicia, "~/Documents/R/GAL_git/prep/AO/ttdi_galicia.csv")
+
+
+
+
+
+
+
+# Remove data from 2024 because the data is not complete
+tr_jobs_pct_tourism_filtered <- tr_jobs_pct_tourism %>%
+  filter(year != 2024)
+
+# Load ggplot2 for better plotting
+library(ggplot2)
+
+# Plot the percentage of tourism employment by province over the years
+
+# Filter for years 2013–2024 (excluding 2024 if incomplete)
+filtered_data <- tr_jobs_pct_tourism_filtered %>%
+  filter(year >= 2013 & year <= 2023)  # Assuming 2024 is incomplete
+
+# Calculate Galician average per year
+galicia_avg <- filtered_data %>%
+  group_by(year) %>%
+  summarise(avg_Ep = mean(Ep, na.rm = TRUE))
+
+# Barplot with average line
+ggplot(filtered_data, aes(x = factor(year), y = Ep, fill = factor(rgn_id))) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
+  geom_line(data = galicia_avg, aes(x = factor(year), y = avg_Ep, group = 1), 
+            inherit.aes = FALSE, color = "black", linewidth = 1.2) +
+  geom_point(data = galicia_avg, aes(x = factor(year), y = avg_Ep), 
+             inherit.aes = FALSE, color = "black", size = 2) +
+  scale_fill_manual(
+    values = c("1" = "#009ACD", "2" = "#CDC673", "3" = "#7570b3", "4" = "#CD6090"),
+    labels = c("A Coruña", "Lugo", "Pontevedra", "Ourense"),
+    name = "Province"
+  ) +
+  labs(
+    title = "Tourism Employment (% of Total) by Province – Galicia (2013–2023)",
+    x = "Year",
+    y = "Tourism Employment (%)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
