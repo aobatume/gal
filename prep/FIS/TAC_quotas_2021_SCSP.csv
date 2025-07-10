@@ -1,0 +1,50 @@
+ ESPECIE ,STOCK ,ZONA CIEM ,TAC 2016 ,TAC 2017 ,TAC 2018 ,TAC 2019 ,TAC 2020 ,TAC 2021,SP
+ANCHOA ,ANE/08 ,VIII ,29700 ,29700 ,29700 ,29700 ,28703 ,29700,Engraulis encrasicolus
+ANCHOA ,ANE/9/3411 ,"IX, X, CPACO 3411 ",7174 ,5978 ,5978 ,,,,Engraulis encrasicolus
+BROSMIO ,USK/567EI ,"V, VI, VII ",46 ,46 ,60 ,60 ,60 ,15,Brosme brosme
+GALLOS ,LEZ/56-14 ,"Vb, VI, XII, XIV ",592 ,646 ,617 ,657 ,671 ,168,Lepidorhombus spp
+GALLOS ,LEZ/07 ,VII ,5476 ,4107 ,3693 ,5440 ,5620 ,1405,Lepidorhombus spp
+GALLOS ,LEZ/8ABDE ,"VIIIa, VIIIb, VIIId, VIIIe ",997 ,748 ,674 ,943 ,993 ,248,Lepidorhombus spp
+GALLOS ,LEZ/8C3411 ,"VIIIc, IX, X, CPACO 3411 ",1258 ,1070 ,1280 ,1728 ,2144 ,1912,Lepidorhombus spp
+RAPE ,ANF/56-14 ,"VI, Vb, XII, XIV ",245 ,294 ,353 ,440 ,307 ,77,Lophiidae
+RAPE ,ANF/07 ,VII ,1231 ,1231 ,1231 ,1212 ,1296 ,324,Lophiidae
+RAPE ,ANF/8ABDE ,"VIIIa, VIIIb, VIIId, VIIIe ",1368 ,1368 ,1368 ,1275 ,1372 ,343,Lophiidae
+RAPE ,ANF/8C3411 ,"VIIIc, IX, X, CPACO 3411 ",2141 ,3296 ,3296 ,3472 ,3353 ,2934,Lophiidae
+MERLÁN ,WHG/08 ,VIII ,1016 ,1016 ,1016 ,1016 ,1016 ,880,Merlangius merlangus
+MERLUZA ,HKE/571214 ,"VI, VII, Vb, XII, XIV ",18248 ,19944 ,18434 ,23512 ,18667 ,4667,Merluccius merluccius
+MERLUZA ,HKE/8ABDE ,"VIIIa, VIIIb, VIIId, VIIIe ",12429 ,13787 ,13065 ,16036 ,12995 ,3249,Merluccius merluccius
+MERLUZA ,HKE/8C3411 ,"VIIIc, IX, X, CPACO 3411 ",6830 ,6732 ,5924 ,5924 ,5600 ,5320,Merluccius merluccius
+BACALADILLA, WHB/1X14 ,"I, II, III, IV, V, VI VII,VIIIa, VIIIb, VIIId, VIIIe, XII, XIV ",26878 ,49865 ,51949 ,41383 ,42258 ,27468,Micromesistius australis
+BACALADILLA, WHB/8C3411 ,"VIIIc, IX, X, CPACO 3411 ", 23931 ,41375 ,42778 ,35251 ,35806 ,8952,Micromesistius australis
+MARUCA AZUL, BLI/5B67 ,"Vb, VI, VII ",157 ,365 ,347 ,377 ,356 ,89,Molva dypterygia
+MARUCA AZUL, BLI/1 2INT ,XII ,426 ,341 ,273 ,218 ,132 ,33,Molva dypterygia
+MARUCA, LIN/6X14 ,"VI, VII, VIII, IX, X, XII, XIV ",2837 ,3774 ,3498 ,3361 ,3361 ,840,Molva molva
+Cigala, NEP/5BC6 ,"VI, Vb ",33 ,33 ,25 ,31 ,32 ,8 ,Nephrops norvegicus
+Cigala,NEP/07 ,VII ,1401 ,1521 ,1745 ,1187 ,1009 ,252 ,Nephrops norvegicus
+Cigala,NEP/8ABDE ,"VIIIa, VIIIb, VIIId, VIIIe ",234 ,250 ,217 ,233 ,233 ,239 ,Nephrops norvegicus
+Cigala,NEP/08C ,VIIIc ,46 ,0 ,0 ,2 ,"2,7 ","2,4 ",Nephrops norvegicus
+Cigala,NEP/9/3411 ,"IX, X, CPACO 3411 ",80 ,84 ,95 ,100 ,97 ,94 ,Nephrops norvegicus
+SOLLA, PLE/8/3411 ,"VIII, IX, X, CPACO 3411 ",66 ,66 ,66 ,66 ,59 ,26 ,Pleuronectes platessa
+ABADEJO, POL/56/14 ,"VI, Vb, XII, XIV ",6 ,6 ,6 ,6 ,3 ,1 ,Pollachius pollachius
+ABADEJO,POL/07 ,VII ,25 ,23 ,23 ,23 ,23 ,6 ,Pollachius pollachius
+ABADEJO,POL/8ABDE ,"VIIIa, VIIIb, VIIId, VIIIe ",252 ,252 ,252 ,252 ,252 ,252 ,Pollachius pollachius
+ABADEJO,POL/08C ,VIIIc ,208 ,208 ,208 ,208 ,187 ,149 ,Pollachius pollachius
+ABADEJO,POL/9/3411 ,"IX, X, CPACO 3411 ",273 ,273 ,273 ,273 ,246 ,196 ,Pollachius pollachius
+ RAYAS ,SRX/67AKXD ,"Via, Vib, VIIa-c, VIIe-k ",876 ,920 ,1058 ,1111 ,1111 ,278 ,rajiformes
+RAYA MOSAICO ,RJU/7DE ,"VIId,VIIe ",11 ,18 ,18 ,23 ,23 ,6 ,Raja undulata
+RAYA DE OJOS ,RJE/7FG ,"vIIf, VIIg ",,,17 ,21 ,21 ,5 ,Raja microocellata
+RAYAS ,SRX/89C ,"VIII, IX ",1057 ,1163 ,1338 ,1471 ,1471 ,368 ,rajiformes
+RAYA MOSAICO , RJU/8C ,VIII ,8 ,9 ,9 ,10 ,10 ,3 ,Raja undulata
+RAYA MOSAICO , RJU/9C ,IX ,12 ,15 ,15 ,15 ,15 ,4,Raja undulata
+ FLETÁN NEGRO ,GHL/2A-C46 ,"II a, IV, Vb, VI ",16 ,16 ,16 ,14 ,14 ,4 ,Reinhardtius hippoglossoides
+CABALLA,MAC/2CX14," VI, VII, VIIIa, VIIIb, VIIId, VIIIe, Vb, II a, XII, XIV ", 24 ,28 ,22 ,18 ,25 ,16 ,Scomber scombrus
+CABALLA,MAC/8C3411,"VIIIc, IX, X, CPACO 3411",33723 ,38432 ,25202 ,24597 ,34708 ,22560 ,Scomber scombrus
+LENGUADO COMÚN ,SOL/8AB ,"VIIIa, VIIIb ",8 ,8 ,8 ,9 ,8 ,8 ,Solea solea
+LENGUADOS ,SOO/8CDE34 ,"VIIIc, VIIId, VIIIe,IX, X, CPACO 3411 ",403 ,403 ,403 ,403 ,323 ,258 ,Solea solea
+MIELGA O GALLUDO ,DGS/15X14 ,"I, V, VI, VII, VIII, XII, XIV ",102 ,129 ,111 ,111 ,99 ,25 ,Squalus acanthias
+JUREL Y ACCESORIAS ,JAX/4BC7D ,"Ivb, Ivc, VIId ",102 ,129 ,111 ,111 ,99 ,25 ,Trachurus
+JUREL Y ACCESORIAS ,JAX/2A14,"Iia, Iva, VI, VIIa-c, VIIe-k,
+VIIIa, VIIIb, VIIId,
+VIIIe, Vb, XII, XIV",11312 ,8663 ,10494 ,12412 ,7260 ,4719 ,Trachurus
+JUREL,JAX/08C,VIIIc,15441 ,11890 ,14335 ,16895 ,10015 ,2504 ,Trachurus trachurus
+JUREL,JAX/09,IX ,17744 ,18977 ,14373 ,24324 ,30237 ,31834 ,Trachurus trachurus
