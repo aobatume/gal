@@ -1,1 +1,0 @@
-[2,"Error in contrib.url(repos, \"source\") : \n  trying to use CRAN without setting a mirror\nCalls: .rs.sourceWithProgress -> eval -> eval -> install.packages -> contrib.url\nExecution halted\n"]

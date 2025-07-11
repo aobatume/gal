@@ -1,6 +1,0 @@
-ices_fao_codes <- unique(ICES_DATA$FAOcode)
-length(ices_fao_codes)  # Should be 638
-
-
-
-setdiff(bbmsy_with_fao$FAOcode, ices_fao_codes)  # FAO codes in RAM not used in ICES
