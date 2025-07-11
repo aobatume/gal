@@ -1,8 +1,0 @@
-prep/BD_SP/
-.DS_Store
-.RData
-.Rhistory
-.Rproj.user/
-output/
-*.log
-*.tmp
