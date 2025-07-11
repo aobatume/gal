@@ -1,0 +1,7 @@
+install.packages("FLCore", repo = "http://flr-project.org/R")
+library(remotes)
+install_github("ices-tools-prod/msy")
+
+
+ICES_DATA<-read.csv("/Users/batume/Documents/R/GAL_git/prep/FIS/ices_taxonomy_enriched.csv")
+

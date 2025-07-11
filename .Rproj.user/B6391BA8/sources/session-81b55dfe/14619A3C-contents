@@ -1,0 +1,31 @@
+#Why are some species missing, is it that there are not enough timeseriopes data 
+
+library(dplyr)
+
+# 1. Total NA counts in the whole dataset (Catch column)
+total_na_catch <- sum(is.na(ICES_FULL_CMSY$Catch))
+cat("Total NAs in Catch:", total_na_catch, "\n")
+
+# 2. Number of missing years (NA Catch) per species
+na_per_species <- ICES_FULL_CMSY %>%
+  group_by(scientificname) %>%
+  summarise(
+    n_years = n(),
+    n_na_catch = sum(is.na(Catch)),
+    prop_na = mean(is.na(Catch)),
+    first_year_with_data = min(Year[!is.na(Catch)]),
+    last_year_with_data = max(Year[!is.na(Catch)])
+  ) %>%
+  arrange(desc(n_na_catch))
+
+print(na_per_species)
+
+# 3. View species with many NAs (e.g. > 4)
+species_many_nas <- na_per_species %>% filter(n_na_catch > 2)
+print(species_many_nas)
+
+
+
+# 4. Species with no catch data at all (all NA)
+species_all_na <- na_per_species %>% filter(n_na_catch == n_years)
+print(species_all_na)

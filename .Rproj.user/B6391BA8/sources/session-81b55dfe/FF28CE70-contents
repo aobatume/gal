@@ -1,0 +1,97 @@
+#Try version cmsy
+
+
+library(datalimited)
+library(dplyr)
+
+# Example species
+species_name <- "Trisopterus luscus"
+
+# Filter data
+species_data <- ICES_species_filtered %>%
+  filter(scientificname == species_name) %>%
+  select(year = Year, catch = Catch) %>%
+  arrange(year)
+
+resilience <- "medium"  # Options: "high", "medium", "low", "very low"
+
+
+result <- cmsy(
+  yr = species_data$year,
+  ct = species_data$catch,
+  start_r = resilience("medium")  # get r bounds based on resilience
+)
+
+summary(result)
+
+colnames(result$bbmsy)
+
+ggplot(result$bbmsy, aes(x = year, y = bbmsy_q50)) +
+  geom_line(color = "blue") +
+  geom_ribbon(aes(ymin = bbmsy_q2.5, ymax = bbmsy_q97.5), alpha = 0.2) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
+  labs(title = "Biomass relative to Bmsy (B/Bmsy)",
+       y = "B/Bmsy",
+       x = "Year") +
+  theme_minimal()
+
+install.packages("CMSY")
+
+
+# Function to map resilience score to r range
+get_r_range <- function(score) {
+  if (score >= 0.8) return(c(0.6, 1.5))
+  if (score >= 0.6) return(c(0.4, 0.9))
+  if (score >= 0.4) return(c(0.2, 0.8))
+  return(c(0.05, 0.5))  # Low resilience
+}
+
+library(datalimited)
+library(dplyr)
+library(purrr)
+
+# Get list of species to run
+species_list <- ICES_species_filtered %>%
+  group_by(scientificname) %>%
+  group_split()
+
+for (sp_data in species_list) {
+  sp_name <- unique(sp_data$scientificname)
+  resilience <- unique(sp_data$resilience_score_final)
+  r_range <- get_r_range(resilience)
+  
+  catch_ts <- sp_data %>%
+    arrange(Year) %>%
+    select(year = Year, catch = Catch) %>%
+    filter(!is.na(catch))
+  
+  print(paste("Species:", sp_name, "Years:", nrow(catch_ts)))
+  
+  if (nrow(catch_ts) >= 10) {
+    print(paste("Running CMSY for", sp_name))
+    try({
+      res <- cmsy(catch = catch_ts, r.low = r_range[1], r.hi = r_range[2])
+      
+      cmsy_results[[sp_name]] <- list(
+        scientificname = sp_name,
+        resilience = resilience,
+        r.low = r_range[1],
+        r.hi = r_range[2],
+        bmsy = res$bmsy,
+        msy = res$msy,
+        k = res$k,
+        r = res$r
+      )
+    }, silent = TRUE)
+  } else {
+    print(paste("Skipping", sp_name, "- not enough data points"))
+  }
+}
+
+
+tryCatch({
+  res <- cmsy(catch = catch_ts, r.low = r_range[1], r.hi = r_range[2])
+  cmsy_results[[sp_name]] <- list(...)
+}, error = function(e) {
+  print(paste("CMSY failed for", sp_name, ":", e$message))
+})

@@ -1,0 +1,46 @@
+#Gapfilling function
+
+library(dplyr)
+library(zoo)
+
+gapfill_catch_strict <- function(df) {
+  # Compute NA stats for filtering
+  na_stats <- df %>%
+    group_by(scientificname) %>%
+    summarise(
+      n_na = sum(is.na(Catch)),
+      last_non_na_year = max(Year[!is.na(Catch)]),
+      first_non_na_year = min(Year[!is.na(Catch)]),
+      .groups = "drop"
+    )
+  
+  # Filter species with >4 NAs or time series ending before 2016
+  valid_species <- na_stats %>%
+    filter(n_na <= 4, last_non_na_year >= 2016) %>%
+    pull(scientificname)
+  
+  # Filter original df accordingly
+  df_filtered <- df %>%
+    filter(scientificname %in% valid_species) %>%
+    left_join(na_stats %>% select(scientificname, first_non_na_year), by = "scientificname") %>%
+    filter(Year >= first_non_na_year) %>%
+    select(-first_non_na_year)
+  
+  # Interpolate catch by group safely
+  df_filled <- df_filtered %>%
+    group_by(scientificname) %>%
+    arrange(Year) %>%
+    group_modify(~ {
+      dat <- .x
+      if (sum(!is.na(dat$Catch)) >= 2) {
+        dat$Catch <- na.approx(dat$Catch, x = dat$Year, na.rm = FALSE, rule = 2)
+      }
+      dat
+    }) %>%
+    ungroup()
+  
+  return(df_filled)
+}
+
+# Now run the function on your data:
+ICES_gapfilled <- gapfill_catch_strict(ICES_FULL_CMSY)

@@ -1,0 +1,1 @@
+[2,"Error in library(rgdal) : there is no package called ‘rgdal’\nCalls: .rs.sourceWithProgress -> eval -> eval -> library\nExecution halted\n"]

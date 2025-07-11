@@ -1,0 +1,30 @@
+##7 xullo
+
+library(dplyr)
+library(stringr)
+library(readr)
+
+# Standardise bbmsy species names to lowercase and trimmed
+bbmsy_species <- bbmsy_data$scientificname %>%
+  str_to_lower() %>%
+  str_trim() %>%
+  unique()
+
+# Standardise scientific names in pesca data
+pesca_tax_final <- pesca_tax_final %>%
+  mutate(scientificname_clean = str_to_lower(str_trim(scientificname)))
+
+# Total sales in Galicia
+total_sales <- sum(pesca_tax_final$total_euros, na.rm = TRUE)
+
+# Sales covered by bbmsy species
+covered_sales <- pesca_tax_final %>%
+  filter(scientificname_clean %in% bbmsy_species) %>%
+  summarise(covered_euros = sum(total_euros, na.rm = TRUE)) %>%
+  pull(covered_euros)
+
+# Calculate percentage
+percentage_covered <- (covered_sales / total_sales) * 100
+
+# Output
+cat("✅ Percentage of total sales covered by bbmsy species:", round(percentage_covered, 2), "%\n")

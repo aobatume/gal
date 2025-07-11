@@ -1,0 +1,145 @@
+# Script copied from the STEP 3 METHODS GLOBAL OHI
+install.packages("remotes")
+remotes::install_github("datalimited/datalimited")
+
+knitr::opts_chunk$set(fig.width = 6, fig.height = 4, fig.path = 'figs/',message = FALSE, warning = FALSE)
+
+devtools::install_github("datalimited/datalimited")
+library(datalimited) 
+library(tidyverse)
+library(doParallel)
+library(here)
+library(dplyr)
+
+source(here::here("workflow", "R", "common.R")) # file creates objects to process data
+
+head(ICES_DATA)
+library(dplyr)
+
+# Step 1: Normalize to lowercase for matching
+ICES_DATA <- ICES_DATA %>%
+  mutate(scientificname_lower = tolower(scientificname))
+
+unmatched_full_data <- ICES_DATA %>%
+  filter(scientificname_lower %in% unmatched_species)
+
+# Prepare catch data in the same structure
+catch <- unmatched_full_data %>%
+  group_by(scientificname, Year) %>%
+  summarise(tons = sum(Catch, na.rm = TRUE), .groups = "drop") %>%
+  rename(stock_id = scientificname,
+         year = Year) %>%
+  mutate(common = NA,  # or add your common names here if available
+         Resilience = "Medium")  # change to Low/High/Very low if known
+
+
+
+registerDoParallel(cores = 5)
+
+cmsy_fits <- plyr::dlply(catch, c("stock_id"), function(x) {
+  
+  x <- arrange(x, year)
+  
+  out <- cmsy(
+    ct = x$tons,
+    yr = x$year,
+    start_r = resilience(x$Resilience[1]),  # Set resilience per species if known
+    reps = 2e4
+  )
+  
+  out$year <- x$year
+  return(out)
+  
+}, .parallel = TRUE)
+
+saveRDS(cmsy_fits, file = "/Users/batume/Documents/R/GAL_git/prep/FIS/output/cmsy_unmatched_fits.rds")
+
+cmsy_fits <- readRDS("output/cmsy_unmatched_fits.rds")
+
+fake_data <- data.frame(bbmsy_q2.5 = NA, bbmsy_q25 = NA, bbmsy_q50 = NA, 
+                        bbmsy_q75 = NA, bbmsy_q97.5 = NA)
+
+cmsy_bbmsy <- plyr::ldply(cmsy_fits, function(x) {
+  bbmsy_cmsy <- x$biomass[, -1] / x$bmsy
+  bbmsy_out <- tryCatch({
+    bbmsy_out <- summarize_bbmsy(bbmsy_cmsy)
+    bbmsy_out$year <- x$year
+    bbmsy_out
+  }, error = function(e) fake_data)
+})
+
+cmsy_bbmsy$model <- "CMSY"
+
+write_csv(cmsy_bbmsy, "/Users/batume/Documents/R/GAL_git/prep/FIS/output/cmsy_bbmsy_unmatched.csv")
+
+cmsy_bbmsy <- read_csv("output/cmsy_bbmsy_unmatched.csv")
+
+
+
+
+
+
+
+nas <- cmsy_bbmsy %>%
+  group_by(stock_id) %>%
+  summarize(m = mean(bbmsy_mean, na.rm = TRUE)) %>%
+  filter(is.na(m))
+
+nrow(nas)  # How many didn’t converge
+
+
+
+
+
+
+
+#### RESILIENCE BITS  
+
+#install.packages("rfishbase")
+library(rfishbase)
+
+head(species())
+colnames(species())
+
+
+library(dplyr)
+library(rfishbase)
+
+colnames(catch)
+species_list <- unique(catch$stock_id)
+
+species_data <- species(species_list, fields = c("Species", "Genus", "Vulnerability", "LongevityWild", "Length")) %>%
+  mutate(scientificname = paste(Genus, Species)) %>%
+  rename(Vulnerability = Vulnerability) %>%   # just to be explicit
+  mutate(resilience_score = case_when(
+    Vulnerability <= 20 ~ 0.8,
+    Vulnerability <= 40 ~ 0.6,
+    Vulnerability <= 60 ~ 0.4,
+    TRUE                ~ 0.2
+  )) %>%
+  select(scientificname, Vulnerability, LongevityWild, Length, resilience_score)
+
+# Step 3: Join back to your dataset
+catch_resi <- left_join(catch, species_data, by = "stock_id")
+
+# Step 4: Optional fill for missing resilience_score
+your_data$resilience_score[is.na(your_data$resilience_score)] <- 0.6  # or your default
+
+
+
+
+
+
+
+library(datalimited)
+
+# Run CMSY
+out <- cmsy(
+  ct = one_species$Catch,
+  yr = one_species$Year,
+  start_r = resilience(one_species$Resilience[1]),
+  reps = 2e4
+)
+
+# Attach year back to the output
+out$year <- one_species$Year
