@@ -1,1 +1,5 @@
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.tif filter=lfs diff=lfs merge=lfs -text
+*shp filter=lfs diff=lfs merge=lfs -text
+*.gpkp filter=lfs diff=lfs merge=lfs -text
 * !text !filter !merge !diff
