@@ -4,7 +4,6 @@ library(ramlegacy)
 library(dplyr)
 library(readr)
 
-
 ICES_DATA <- read.csv("/Users/batume/Documents/R/GAL_git/prep/FIS/ices_taxonomy_enriched.csv")
 
 ram_data <- tryCatch({
@@ -145,6 +144,36 @@ str(unmatched_species)
 top_90_with_flags <- top_90_with_ices_flag %>%
   mutate(in_matched = paste(FAOcode, scientificname) %in% 
            paste(matched_species$FAOcode, matched_species$scientificname))
+
+
+
+
+######### FIX RESILIENCES FOR MISSING SCORES ############
+
+# 1. Create the manual resilience score table
+manual_resilience <- tibble::tibble(
+  scientificname = c(
+    "Palaemon serratus", "Sepia officinalis", "Eledone cirrhosa",
+    "Octopus vulgaris", "Pollicipes pollicipes", "Raja spp",
+    "Illex illecebrosus", "Loligo vulgaris", "Todaropsis eblanae"
+  ),
+  resilience_score = c(0.8, 0.8, 0.8, 0.8, 0.6, 0.2, 0.8, 0.8, 0.8)
+)
+
+# 2. Join it into the existing dataset
+ICES_species_filtered <- ICES_species_filtered %>%
+  left_join(manual_resilience, by = "scientificname") %>%
+  mutate(
+    # If the original resilience score is NA, use the manual one
+    resilience_score_final = coalesce(resilience_score.x, resilience_score.y)
+  ) %>%
+  select(-resilience_score.x, -resilience_score.y)  # Optional cleanup
+
+# 3. View to confirm
+print(ICES_species_filtered %>% select(scientificname, resilience_score_final) %>% distinct())
+
+
+
 
 
 

@@ -1,0 +1,20 @@
+=====================================
+Global Distribution of Seagrasses
+
+	Date created: 2005
+	Version: 8.0
+	Date of version release: March 2021
+	Distributed under UNEP-WCMC's General Data License (excluding WDPA)
+	For more information, please contact marine@unep-wcmc.org. 
+
+--------------------------------------------------------
+Requested citation: 
+UNEP-WCMC, Short FT (2020). Global Distribution of Seagrasses (version 7). Seventh update to the data layer used in Green and Short (2003), superseding version 6. Cambridge (UK): UN Environment World Conservation Monitoring Centre. URL: http://data.unep-wcmc.org/datasets/7
+
+Other cited reference(s):
+Green EP, Short FT (2003). World atlas of seagrasses. Prepared by UN Environment World Conservation Monitoring Centre. Berkeley (California, USA): University of California. 332 pp.
+--------------------------------------------------------
+
+Earlier version-specific comments:
+============================================
+For information regarding changes between versions, please refer to the "Lineage" field in the associated metadata.

@@ -1,0 +1,23 @@
+=====================================
+Global Distribution of Cold-water Corals
+
+	Date created: 2016-2017
+	Version: 5.1
+	Date of version release: March 2021
+	Data provider: Freiwald et al. (2004)
+	Distributed under UNEP-WCMC's General Data License (excluding WDPA)
+	For more information, please contact marine@unep-wcmc.org. 
+
+--------------------------------------------------------
+Citation:
+Freiwald A, Rogers A, Hall-Spencer J, Guinotte JM, AJ Davies, Yesson C, Martin CS, Weatherdon LV (2017). Global distribution of cold-water corals (version 5.0). Fifth update to the dataset in Freiwald et al. (2004) by UNEP-WCMC, in collaboration with Andre Freiwald and John Guinotte. Cambridge (UK): UN Environment World Conservation Monitoring Centre. URL: http://data.unep-wcmc.org/datasets/3
+
+Other cited reference(s):
+Freiwald A, Fosså JH, Grehan A, Koslow T, Roberts JM (2004). Cold-water coral reefs. Cambridge (UK): UN Environment World Conservation Monitoring Centre.
+--------------------------------------------------------
+
+Earlier version-specific comments:
+============================================
+For information regarding change between versions, please refer to the "Lineage" field in the metadata. 
+
+

@@ -1,0 +1,18 @@
+=====================================
+Global Distribution of Saltmarshes
+
+Version 7.0, March 2021
+Distributed under UNEP-WCMC's General Data License (excluding WDPA)
+For more information, please contact marine@unep-wcmc.org. 
+
+--------------------------------------------------------
+Requested citation: 
+
+Mcowen C, Weatherdon LV, Bochove J, Sullivan E, Blyth S, Zockler C, Stanwell-Smith D, Kingston N, 
+Martin CS, Spalding M, Fletcher S (2017). A global map of saltmarshes (ver 6.0). Biodiversity Data Journal 5: e11764. 
+Data URL: http://data.unep-wcmc.org/datasets/43; Paper DOI: https://doi.org/10.3897/BDJ.5.e11764 
+--------------------------------------------------------
+
+Earlier version-specific comments:
+============================================
+Please refer to the "lineage" field in the associated metadata for more information. 
